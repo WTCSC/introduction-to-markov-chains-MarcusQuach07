@@ -1,11 +1,12 @@
 import random
+import string
 
 """
 Create the sample text and the dictionary to store word transitions
 
 TODO: Replace the sample text with a larger text for more interesting results
 """
-text = "Mary had a little lamb its fleece was white as snow"
+text = "Le cadre d’un palabre n’augmente guère le faste royal de la cour d’Anno. Le public est plus nombreux cependant, et c’est un peu plus original, la parole n’étant portée que par les porte-canne, sorte de factotums qui ont en main une canne sculptée et ne font que répéter les paroles du roi ou des intéressés qui viennent solliciter une mission ou en rendre compte. Dans ces palabres souvent il y a aussi des individus faisant fonction d’huissiers : ils indiquent les places à occuper par les assistants, leur font donner des tabourets, en un mot s’occupent de l’ordre des préséances, etc. ; on reconnaît ces individus à une tête de singe qu’ils portent suspendue au cou : c’est la chaîne de nos huissiers."
 transitions = {}
 
 """
@@ -24,7 +25,6 @@ for i in range(len(words) - 1):
     if current_word not in transitions:
         transitions[current_word] = []
     transitions[current_word].append(next_word)
-
 """
 Generate new text using the Markov Chain, starting with a given word and
 generating a specified number of words:
@@ -43,6 +43,7 @@ e.g., capitalization, punctuation, line breaks, etc.
 def generate_text(start_word, num_words):
     current_word = start_word
     result = [current_word]
+    
     for _ in range(num_words - 1):
         if current_word in transitions:
             next_word = random.choice(transitions[current_word])
@@ -50,11 +51,23 @@ def generate_text(start_word, num_words):
             current_word = next_word
         else:
             break
-    return " ".join(result)
+    
+    # Join the words into a single string and capitalize the first word
+    generated_text = " ".join(result)
+    generated_text = generated_text[0].upper() + generated_text[1:]  # Capitalize the first letter
+
+    # Add punctuation at the end (a basic approach)
+    if generated_text[-1] not in string.punctuation:
+        generated_text += "."
+
+    return generated_text
+
 
 """
 Example usage, generating 10 words starting with "Mary"
 
 TODO: Accept user input for the starting word and number of words to generate
 """
-print(generate_text("Mary", 10))
+input_word = input("Enter a word: ").strip()
+number_of_words = int(input("Enter number of words to generate: "))
+print(generate_text(input_word, number_of_words))
